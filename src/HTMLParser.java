@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 
 public class HTMLParser {
     static InetAddress[] inetAddresses;
-    static String site2, site;
+    static String site2;
     static boolean ip = false;
 
     public final static HashSet<String> listurl(String args) throws Exception {
@@ -55,7 +55,7 @@ public class HTMLParser {
         for (String link : links) {
             System.out.println(link);
         }
-        System.out.println("*****************************************************************************************");
+        System.out.println("*******************************************************************");
         return links;
 
     }
@@ -68,7 +68,7 @@ public class HTMLParser {
             doc = Jsoup.connect(url).get();
         } catch (HttpStatusException e) {
             System.out.println("Not Accessible :  " + url.toString());
-            NotAccessible =true;
+            NotAccessible = true;
         }
         if (!NotAccessible) {
             Elements links = doc.select("a[href]");

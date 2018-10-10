@@ -14,15 +14,13 @@ import java.util.Scanner;
 public class VulCheck {
 
     private static HttpURLConnection con;
-    private static Scanner input = new Scanner(System.in);
+   // private static Scanner input = new Scanner(System.in);
     private static String url, url2;
     private static String urlParameters;
     private static StringBuilder content;
     private static URL myUrl;
     private static Integer count = 0;
-    private static boolean cv = false;
-    private static GetURLParam GUP;
-    private static HTMLParser hp;
+    //private static boolean cv = false;
     private static HashSet<String> links;
 //    private static HashSet<String> Li
 
@@ -30,11 +28,11 @@ public class VulCheck {
 
 
         url = args[0];
-        links = hp.listurl(url);
+        links = HTMLParser.listurl(url);
 
         for (String link : links) {
 
-            url2 = GUP.sendGet(link);
+            url2 = GetURLParam.sendGet(link);
             if (url2 != null) {
                 url2 = link.substring(0, link.indexOf("/", 7)) + url2 + "/";
 
