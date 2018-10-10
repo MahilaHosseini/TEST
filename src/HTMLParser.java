@@ -19,7 +19,7 @@ public class HTMLParser {
 
     public final static HashSet<String> listurl(String args) throws Exception {
 
-        site2 = args.substring(args.indexOf(":") + 3);
+        site2 = args.substring(args.indexOf(":") + 3 , args.indexOf("/",8));
         System.out.println("site2 " + site2);
 
         try {
@@ -90,7 +90,7 @@ public class HTMLParser {
             else {
                 for (Element link : links) {
                     for (InetAddress ina : inetAddresses) {
-                        if (link.toString().contains(ina.toString()) || link.toString().contains(site2)) {
+                        if (link.attr("abs:href").contains(ina.toString()) || link.attr("abs:href").contains(site2)) {
                             result.add(link.attr("abs:href"));
                             break;
                         }

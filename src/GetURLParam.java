@@ -41,7 +41,7 @@ public class GetURLParam {
                     i = sub.indexOf(" action=") + 8;
                     j = sub.indexOf(" ", i);
                     sub2 = sub.substring(i, j);
-                    //System.out.println(sub2);
+                    System.out.println("sub2:  "+sub2);
                     return sub2;
                 } else
                     return null;
