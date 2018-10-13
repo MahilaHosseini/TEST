@@ -18,7 +18,7 @@ public class VulCheck {
     private static HttpURLConnection con;
     // private static Scanner input = new Scanner(System.in);
     private static String url, url2, inpname;
-    private static HashMap<String, String> param;
+    private static HashMap<String, String> param = new HashMap<String, String>();;
     private static String urlParameters;
     private static StringBuilder content;
     private static URL myUrl;
@@ -33,29 +33,30 @@ public class VulCheck {
         //System.out.println("link number:  " + links.size());
         for (String link : links) {
             //System.out.println(count +"  "+ link);
-            param = new HashMap<String, String>();
+
             param = GetInputName.sendGet(link);
 
             if (!param.isEmpty()) {
-                url2 = param.get("action");
+               // System.out.println(param.values());
+                url2 = param.remove("action");
                 if (!url2.contains("http"))
                     url2 = link.substring(0, link.indexOf("/", 7)) + url2 + "/";
                 myUrl = new URL(url2);
-                System.out.println("link is : " +link);
-                System.out.println("url is : " +url2);
-                for (int i = 1; i < param.size(); i++) {
-                    inpname = "input" + i;
+               // System.out.println("link is : " +link);
+              //  System.out.println("url is : " +url2);
+                for (String inpname : param.keySet()) {
                     inpname = param.get(inpname);
                     urlParameters = inpname + "=<script>alert(\"XSS Attacked" + count.toString() + "\")</script>";
-                    System.out.println("param is :  " + urlParameters);
+                   // System.out.println("param is :  " + urlParameters);
                     byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-                    urlParameters = urlParameters.split("=")[1];
+                    urlParameters= "<script>alert(\"XSS Attacked" + count.toString() + "\")</script>";
+                   // System.out.println("ulp is :  " +urlParameters);
                     checkVulnerable(postData, link);
                     count++;
                 }
             }
 
-
+            param.clear();
         }
     }
 
@@ -98,6 +99,7 @@ public class VulCheck {
 
         if (content.toString().contains(urlParameters)) {
             System.out.println("xss vulnerable");
+            System.out.println("ulp is :  " +urlParameters);
             System.out.println("***" + link + "***");
 
         }

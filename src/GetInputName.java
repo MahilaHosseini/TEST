@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 
 public class GetInputName {
-    private static int i, j;
+    private static int i, j, k;
     private static BufferedReader in;
     private static boolean done = false;
     private static String sub, sub2, sub3, res, inp;
@@ -30,6 +30,8 @@ public class GetInputName {
         } catch (IOException e) {
             er = true;
         }
+
+
         if (!er) {
             String inputLine;
             StringBuffer response = new StringBuffer();
@@ -41,6 +43,7 @@ public class GetInputName {
             in.close();
             if (response.toString().contains("<form ")) {
                 param = new HashMap<String, String>();
+                done = false;
                 i = response.toString().indexOf("<form ");
                 if (response.toString().contains("</form>"))
                     j = response.toString().indexOf("</form>", i);
@@ -61,26 +64,41 @@ public class GetInputName {
                 // System.out.println("url i s:  " + url);
                 res = response.toString().substring(response.toString().indexOf("<form "));
                 // System.out.println(res);
-                while (!done) {
+                if (res.contains("input")) {
+                    while (!done) {
+                        i = res.indexOf("<input ");
+                        j = res.indexOf(">", i)+1;
+                        sub3 = res.substring(i, j);
+                        res = res.substring(j);
+                        if (sub3.contains("name")) {
+                            if (sub3.contains("\"")) {
+                                i = sub3.indexOf("name=") + 6;
+                                j = sub3.indexOf("\"", i);
+                            } else if (sub3.contains("\'")) {
+                                i = sub3.indexOf("name=") + 6;
+                                j = sub3.indexOf("\'", i);
+                            } else {
+                                i = sub3.indexOf("name=") + 5;
+                                k = sub3.indexOf(">", i);
+                                j = sub3.indexOf(" ", i);
+                                if (k < j || j == -1)
+                                    j = k;
+                            }
+                           // System.out.println(sub3 + " url :  " + url + "\n j=" + j);
+                            sub3 = sub3.substring(i, j);
+                            // System.out.println(sub3);
 
-                    i = res.indexOf("<input ");
-                    j = res.indexOf(">", i);
-                    sub3 = res.substring(i, j);
-                    res = res.substring(j);
-                    i = sub3.indexOf("name=") + 6;
-                    j = sub3.indexOf(" ", i) - 1;
-                    sub3 = sub3.substring(i, j);
-                    // System.out.println(sub3);
-                    if (!sub3.isEmpty()) {
-                        count++;
-                        inp = "input" + count;
-                        param.put(inp, sub3);
+                            if (!sub3.isEmpty()) {
+                                count++;
+                                inp = "input" + count;
+                                param.put(inp, sub3);
+                            }
+                        }
+                        if (!res.contains("<input"))
+                            done = true;
+
                     }
-                    if (!res.contains("<input "))
-                        done = true;
-
                 }
-
 
                 if (sub2.contains("\""))
                     sub2 = sub2.split("\"")[0] + sub2.split("\"")[1];
@@ -90,8 +108,8 @@ public class GetInputName {
                 if (sub2.indexOf("/") != 0 && !sub2.contains("http"))
                     sub2 = "/" + sub2;
                 param.put("action", sub2);
-                System.out.println("urls:  "+url);
-                System.out.println(param.values());
+                System.out.println("urls:  " + url);
+
 
                 return param;
             } else {
@@ -110,6 +128,6 @@ public class GetInputName {
     }
 
     public static void main(String[] args) throws Exception {
-        sendGet("http://192.168.56.102/peruggia/index.php?action=comment&pic_id=1");
+        sendGet("http://192.168.56.102/tikiwiki/tiki-pagehistory.php?page=HomePage&source=0");
     }
 }
